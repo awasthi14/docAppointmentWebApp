@@ -33,6 +33,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" />} />
+        
         <Route path="/dashboard" element={<DashboardRouter />} />
         
         <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
@@ -45,6 +47,8 @@ function App() {
         <Route path="/doctor/profile" element={<DoctorProfileScreen />} />
 
         <Route path="/doctor/appointments" element={<ViewAppointmentsScreen />} />
+
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
       </Routes>
     </Router>
