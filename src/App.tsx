@@ -2,8 +2,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import PatientDashboard from './dashboards/PatientDashboard'
 import DoctorDashboard from './doctor/DoctorDashboard';
-import AdminDashboard from './dashboards/AdminDashboard';
 import type { Role } from './types';
+
+import AdminDashboard from './admin/AdminDashboard';
 
 import DoctorProfileScreen from './doctor/DoctorProfileScreen';
 import AddAvailabilityScreen from './doctor/AddAvailabilityScreen';
