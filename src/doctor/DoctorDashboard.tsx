@@ -2,12 +2,15 @@ import { useState } from 'react';
 import DoctorProfileScreen from './DoctorProfileScreen';
 import AddAvailabilityScreen from './AddAvailabilityScreen';
 import ViewAppointmentsScreen from './ViewAppointmentsScreen';
+import Header from '../components/Header';
 import './DoctorDashboard.css';
 
 const DoctorDashboard = () => {
   const [activeScreen, setActiveScreen] = useState<'profile' | 'availability' | 'appointments'>('profile');
 
   return (
+    <>
+  <Header />
     <div className="doctor-dashboard">
       <h1 className="dashboard-title">🩺 Doctor Dashboard</h1>
 
@@ -40,6 +43,7 @@ const DoctorDashboard = () => {
         {activeScreen === 'appointments' && <ViewAppointmentsScreen />}
       </div>
     </div>
+    </>
   );
 };
 

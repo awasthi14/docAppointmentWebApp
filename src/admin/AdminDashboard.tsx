@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import DoctorManagement from './DoctorManagement';
 import PatientManagement from './PatientManagement';
+import Header from '../components/Header';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<'doctors' | 'patients'>('doctors');
 
   return (
+    <>
+  <Header />
     <div className="admin-container">
       <h1 className="admin-title">🛠️ Admin Portal</h1>
 
@@ -29,6 +32,7 @@ const AdminDashboard = () => {
         {activeTab === 'doctors' ? <DoctorManagement /> : <PatientManagement />}
       </div>
     </div>
+    </>
   );
 };
 

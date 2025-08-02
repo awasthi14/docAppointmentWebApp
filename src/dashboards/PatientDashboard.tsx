@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Header from '../components/Header';
 import './PatientDashboard.css';
 
 type Doctor = {
@@ -47,6 +48,9 @@ const PatientDashboard = () => {
   };
 
   return (
+    <>
+    <Header />
+    
     <div className="dashboard-container">
       <h1 className="dashboard-title">👤 Patient Dashboard</h1>
 
@@ -91,6 +95,7 @@ const PatientDashboard = () => {
         )}
       </section>
     </div>
+    </>
   );
 };
 
