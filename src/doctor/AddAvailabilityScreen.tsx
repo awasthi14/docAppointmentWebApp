@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './AddAvailabilityScreen.css';
 
 const AddAvailabilityScreen = () => {
   const [date, setDate] = useState('');
@@ -14,14 +15,27 @@ const AddAvailabilityScreen = () => {
   };
 
   return (
-    <div>
-      <h2>Add Time Slot</h2>
-      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-      <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-      <button onClick={handleAdd}>Add</button>
-      <ul>
-        {slots.map((s, i) => <li key={i}>{s.date} @ {s.time}</li>)}
-      </ul>
+    <div className="availability-container">
+      <h2 className="section-title">📅 Add Availability</h2>
+
+      <div className="form-section">
+        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+        <button onClick={handleAdd}>➕ Add</button>
+      </div>
+
+      <div className="slot-list">
+        <h3>My Time Slots</h3>
+        {slots.length === 0 ? (
+          <p className="empty-note">No time slots added.</p>
+        ) : (
+          <ul>
+            {slots.map((s, i) => (
+              <li key={i}>{s.date} @ {s.time}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
