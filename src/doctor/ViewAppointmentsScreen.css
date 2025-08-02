@@ -1,0 +1,49 @@
+.appointments-container {
+  padding: 1rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.appointment-list {
+  list-style: none;
+  padding: 0;
+}
+
+.appointment-item {
+  display: flex;
+  justify-content: space-between;
+  background: #f4f7fc;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ddd;
+}
+
+.appointment-item span {
+  flex: 1;
+  font-size: 1rem;
+}
+
+.patient {
+  font-weight: 600;
+  color: #222;
+}
+
+.date {
+  text-align: center;
+  color: #444;
+}
+
+.time {
+  text-align: right;
+  color: #0077cc;
+}
+
+.empty-note {
+  color: #777;
+  font-style: italic;
+}

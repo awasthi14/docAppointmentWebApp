@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './DoctorManagement.css';
 
 type Doctor = {
   id: number;
@@ -44,19 +45,30 @@ const DoctorManagement = () => {
   };
 
   return (
-    <div>
+    <div className="doctor-management">
       <h2>🩺 Doctors</h2>
-      <input name="name" placeholder="Name" value={form.name || ''} onChange={handleChange} />
-      <input name="specialty" placeholder="Specialty" value={form.specialty || ''} onChange={handleChange} />
-      <input name="email" placeholder="Email" value={form.email || ''} onChange={handleChange} />
-      <button onClick={handleSubmit}>{editingId !== null ? 'Update' : 'Add'} Doctor</button>
 
-      <ul>
+      <div className="form-container">
+        <input name="name" placeholder="Name" value={form.name || ''} onChange={handleChange} />
+        <input name="specialty" placeholder="Specialty" value={form.specialty || ''} onChange={handleChange} />
+        <input name="email" placeholder="Email" value={form.email || ''} onChange={handleChange} />
+        <button onClick={handleSubmit}>
+          {editingId !== null ? 'Update' : 'Add'} Doctor
+        </button>
+      </div>
+
+      <ul className="doctor-list">
         {doctors.map((doc) => (
-          <li key={doc.id}>
-            {doc.name} ({doc.specialty}) – {doc.email}
-            <button onClick={() => handleEdit(doc)}>Edit</button>
-            <button onClick={() => handleDelete(doc.id)}>Delete</button>
+          <li key={doc.id} className="doctor-item">
+            <div className="doctor-info">
+              <span className="name">{doc.name}</span>
+              <span className="specialty">{doc.specialty}</span>
+              <span className="email">{doc.email}</span>
+            </div>
+            <div className="doctor-actions">
+              <button onClick={() => handleEdit(doc)} className="edit-btn">Edit</button>
+              <button onClick={() => handleDelete(doc.id)} className="delete-btn">Delete</button>
+            </div>
           </li>
         ))}
       </ul>

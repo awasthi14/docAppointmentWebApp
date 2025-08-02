@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './DoctorProfileScreen.css';
 
 const DoctorProfileScreen = () => {
   const [profile, setProfile] = useState({
@@ -18,21 +19,21 @@ const DoctorProfileScreen = () => {
   };
 
   return (
-    <div>
-      <h2>Doctor Profile</h2>
+    <div className="doctor-profile">
+      <h2 className="section-title">👨‍⚕️ Doctor Profile</h2>
       {editing ? (
-        <div>
-          <input name="name" value={profile.name} onChange={handleChange} />
-          <input name="specialty" value={profile.specialty} onChange={handleChange} />
-          <input name="contact" value={profile.contact} onChange={handleChange} />
-          <button onClick={handleSubmit}>Save</button>
+        <div className="form-section">
+          <input name="name" value={profile.name} onChange={handleChange} placeholder="Name" />
+          <input name="specialty" value={profile.specialty} onChange={handleChange} placeholder="Specialty" />
+          <input name="contact" value={profile.contact} onChange={handleChange} placeholder="Contact" />
+          <button className="primary-btn" onClick={handleSubmit}>💾 Save</button>
         </div>
       ) : (
-        <div>
+        <div className="profile-view">
           <p><strong>Name:</strong> {profile.name}</p>
           <p><strong>Specialty:</strong> {profile.specialty}</p>
           <p><strong>Contact:</strong> {profile.contact}</p>
-          <button onClick={() => setEditing(true)}>Edit</button>
+          <button className="primary-btn" onClick={() => setEditing(true)}>✏️ Edit</button>
         </div>
       )}
     </div>

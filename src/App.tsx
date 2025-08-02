@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
-import PatientDashboard from './dashboards/PatientDashboard'
+import PatientDashboard from './patient/PatientDashboard'
 import DoctorDashboard from './doctor/DoctorDashboard';
 import type { Role } from './types';
 
