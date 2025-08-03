@@ -32,6 +32,7 @@ const Login = () => {
       // Example response: { token, email, role }
       localStorage.setItem('token', data.data.token);
       localStorage.setItem('email', data.data.user.email);
+      localStorage.setItem('userId', data.data.user.id);
       localStorage.setItem('role', data.data.user.role.toLowerCase());
 
       switch (data.data.user.role.toLowerCase() as Role) {
