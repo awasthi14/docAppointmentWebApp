@@ -36,29 +36,33 @@ const PatientManagement = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ✅ Update patient
-  const handleSubmit = () => {
-    if (editingId !== null) {
-      fetch(`${API_BASE_URL}/patients/${editingId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(form),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error('Failed to update patient');
-          return res.json();
-        })
-        .then(() => {
-          setEditingId(null);
-          setForm({});
-          fetchPatients();
-        })
-        .catch((err) => console.error(err));
-    }
-  };
+  // ✅ save/Update patient
+const handleSubmit = () => {
+  const method = editingId !== null ? 'PUT' : 'POST';
+  const url = editingId !== null
+    ? `${API_BASE_URL}/patients/${editingId}`
+    : `${API_BASE_URL}/patients`;
+
+  fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(form),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(editingId ? 'Failed to update patient' : 'Failed to create patient');
+      return res.json();
+    })
+    .then(() => {
+      setEditingId(null);
+      setForm({});
+      fetchPatients();
+    })
+    .catch((err) => console.error(err));
+};
+
 
   const handleEdit = (pat: Patient) => {
     setForm(pat);

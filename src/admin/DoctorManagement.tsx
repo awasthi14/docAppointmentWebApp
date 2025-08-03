@@ -30,31 +30,34 @@ const DoctorManagement = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ✅ Submit form for update
+  // ✅ Submit form for update/save
 const handleSubmit = () => {
   const token = localStorage.getItem('token');
+  const method = editingId !== null ? 'PUT' : 'POST';
+  const url = editingId !== null
+    ? `${API_BASE_URL}/doctors/${editingId}`
+    : `${API_BASE_URL}/doctors`;
 
-  if (editingId !== null) {
-    fetch(`${API_BASE_URL}/doctors/${editingId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(form),
+  fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(form),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(editingId ? 'Failed to update doctor' : 'Failed to create doctor');
+      return res.json();
     })
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to update doctor');
-        return res.json();
-      })
-      .then(() => {
-        setEditingId(null);
-        setForm({});
-        fetchDoctors();
-      })
-      .catch((err) => console.error(err));
-  }
+    .then(() => {
+      setEditingId(null);
+      setForm({});
+      fetchDoctors();
+    })
+    .catch((err) => console.error(err));
 };
+
 
 
   const handleEdit = (doc: Doctor) => {
