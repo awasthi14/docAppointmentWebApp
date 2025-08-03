@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../config';
 import './PatientManagement.css';
 
 type Patient = {
@@ -9,30 +10,54 @@ type Patient = {
 };
 
 const PatientManagement = () => {
-  const [patients, setPatients] = useState<Patient[]>([
-    { id: 1, name: 'Alice', age: 30, email: 'alice@example.com' },
-  ]);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [form, setForm] = useState<Partial<Patient>>({});
   const [editingId, setEditingId] = useState<number | null>(null);
+
+  const token = localStorage.getItem('token');
+
+  // ✅ Fetch patient list
+  const fetchPatients = () => {
+    fetch(`${API_BASE_URL}/patients`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setPatients(data.data))
+      .catch((err) => console.error('Failed to fetch patients:', err));
+  };
+
+  useEffect(() => {
+    fetchPatients();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // ✅ Update patient
   const handleSubmit = () => {
     if (editingId !== null) {
-      setPatients(patients.map(p => (p.id === editingId ? { ...(p as Patient), ...form } : p)));
-    } else {
-      const newPatient: Patient = {
-        id: Date.now(),
-        name: form.name || '',
-        age: Number(form.age) || 0,
-        email: form.email || '',
-      };
-      setPatients([...patients, newPatient]);
+      fetch(`${API_BASE_URL}/patients/${editingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(form),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to update patient');
+          return res.json();
+        })
+        .then(() => {
+          setEditingId(null);
+          setForm({});
+          fetchPatients();
+        })
+        .catch((err) => console.error(err));
     }
-    setForm({});
-    setEditingId(null);
   };
 
   const handleEdit = (pat: Patient) => {
@@ -40,8 +65,21 @@ const PatientManagement = () => {
     setEditingId(pat.id);
   };
 
+  // ✅ Delete patient
   const handleDelete = (id: number) => {
-    setPatients(patients.filter(p => p.id !== id));
+    if (!window.confirm('Are you sure you want to delete this patient?')) return;
+
+    fetch(`${API_BASE_URL}/patients/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to delete patient');
+        fetchPatients();
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -49,9 +87,25 @@ const PatientManagement = () => {
       <h2>👤 Patients</h2>
 
       <div className="form-container">
-        <input name="name" placeholder="Name" value={form.name || ''} onChange={handleChange} />
-        <input name="age" placeholder="Age" value={form.age || ''} onChange={handleChange} type="number" />
-        <input name="email" placeholder="Email" value={form.email || ''} onChange={handleChange} />
+        <input
+          name="name"
+          placeholder="Name"
+          value={form.name || ''}
+          onChange={handleChange}
+        />
+        <input
+          name="age"
+          placeholder="Age"
+          value={form.age || ''}
+          onChange={handleChange}
+          type="number"
+        />
+        <input
+          name="email"
+          placeholder="Email"
+          value={form.email || ''}
+          onChange={handleChange}
+        />
         <button onClick={handleSubmit}>
           {editingId !== null ? 'Update' : 'Add'} Patient
         </button>
@@ -66,8 +120,15 @@ const PatientManagement = () => {
               <span className="email">{pat.email}</span>
             </div>
             <div className="patient-actions">
-              <button onClick={() => handleEdit(pat)} className="edit-btn">Edit</button>
-              <button onClick={() => handleDelete(pat.id)} className="delete-btn">Delete</button>
+              <button onClick={() => handleEdit(pat)} className="edit-btn">
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(pat.id)}
+                className="delete-btn"
+              >
+                Delete
+              </button>
             </div>
           </li>
         ))}
