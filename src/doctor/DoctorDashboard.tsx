@@ -22,12 +22,12 @@ const DoctorDashboard = () => {
         >
           👨‍⚕️ Profile
         </button>
-        <button
+        {/* <button
           onClick={() => setActiveScreen('availability')}
           className={activeScreen === 'availability' ? 'active' : ''}
         >
           📅 Add Availability
-        </button>
+        </button> */}
         <button
           onClick={() => setActiveScreen('appointments')}
           className={activeScreen === 'appointments' ? 'active' : ''}

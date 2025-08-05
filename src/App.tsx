@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import PatientDashboard from './patient/PatientDashboard'
 import DoctorDashboard from './doctor/DoctorDashboard';
-import type { Role } from './types';
+// import type { Role } from './types';
 
 import AdminDashboard from './admin/AdminDashboard';
 
@@ -11,42 +11,39 @@ import AddAvailabilityScreen from './doctor/AddAvailabilityScreen';
 import ViewAppointmentsScreen from './doctor/ViewAppointmentsScreen';
 
 
-const DashboardRouter = () => {
-  const role = localStorage.getItem('role') as Role | null;
+// const DashboardRouter = () => {
+//   const role = localStorage.getItem('role') as Role | null;
 
-  if (!role) return <Navigate to="/login" />;
+//   if (!role) return <Navigate to="/login" />;
 
-  switch (role) {
-    case 'user':
-      return <PatientDashboard />;
-    case 'doctor':
-      return <DoctorDashboard />;
-    case 'admin':
-      return <AdminDashboard />;
-    default:
-      return <Navigate to="/login" />;
-  }
-};
+//   switch (role) {
+//     case 'patient':
+//       return <PatientDashboard />;
+//     case 'doctor':
+//       return <DoctorDashboard />;
+//     case 'admin':
+//       return <AdminDashboard />;
+//     default:
+//       return <Navigate to="/login" />;
+//   }
+// };
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="*" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Navigate to="/login" />} />
         
-        <Route path="/dashboard" element={<DashboardRouter />} />
         
         <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
         <Route path="/doctor/availability" element={<AddAvailabilityScreen />} />
+        <Route path="/doctor/profile" element={<DoctorProfileScreen />} />
+        <Route path="/doctor/appointments" element={<ViewAppointmentsScreen />} />
 
         
-        <Route path="/user/dashboard" element={<PatientDashboard />} />
-
-        <Route path="*" element={<Navigate to="/login" />} />
-        <Route path="/doctor/profile" element={<DoctorProfileScreen />} />
-
-        <Route path="/doctor/appointments" element={<ViewAppointmentsScreen />} />
+        <Route path="/patient/dashboard" element={<PatientDashboard />} />
 
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
 

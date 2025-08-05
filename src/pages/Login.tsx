@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
+import type { Role } from '../types';
 import './Login.css';
 
-type Role = 'user' | 'doctor' | 'admin';
-
-const mockUsers = [
-  { email: 'patient@example.com', password: '1234', role: 'user' },
-  { email: 'doctor@example.com', password: '1234', role: 'doctor' },
-  { email: 'admin@example.com', password: '1234', role: 'admin' },
-];
+// type Role = 'patient' | 'doctor' | 'admin';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,18 +12,32 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const found = mockUsers.find(
-      (user) => user.email === email && user.password === password
-    );
+  const handleLogin = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (found) {
-      localStorage.setItem('role', found.role);
-      localStorage.setItem('email', found.email);
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.message || 'Login failed');
+      }
 
-      switch (found.role as Role) {
-        case 'user':
-          navigate('/user/dashboard');
+      const data = await res.json();
+
+      // Example response: { token, email, role }
+      localStorage.setItem('token', data.data.token);
+      localStorage.setItem('email', data.data.user.email);
+      localStorage.setItem('userId', data.data.user.id);
+      localStorage.setItem('role', data.data.user.role.toLowerCase());
+
+      switch (data.data.user.role.toLowerCase() as Role) {
+        case 'patient':
+          navigate('/patient/dashboard');
           break;
         case 'doctor':
           navigate('/doctor/dashboard');
@@ -38,8 +48,8 @@ const Login = () => {
         default:
           setError('Unknown role.');
       }
-    } else {
-      setError('Invalid email or password.');
+    } catch (err: any) {
+      setError(err.message || 'Login error');
     }
   };
 
@@ -48,20 +58,20 @@ const Login = () => {
       <div className="login-card">
         <h2 className="login-title">Login</h2>
         {error && <p className="error-text">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
           className="login-input"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
           className="login-input"
-        />
+      />
         <button onClick={handleLogin} className="login-button">
           Login
         </button>

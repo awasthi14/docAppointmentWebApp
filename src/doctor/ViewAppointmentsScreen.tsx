@@ -1,10 +1,35 @@
+import { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../config';
 import './ViewAppointmentsScreen.css';
 
+type Appointment = {
+  patientName: string;
+  appointment_date: string; // assumed from backend
+  time: string;
+};
+
 const ViewAppointmentsScreen = () => {
-  const appointments = [
-    { patientName: 'Alice', date: '2025-08-02', time: '10:00 AM' },
-    { patientName: 'Bob', date: '2025-08-03', time: '2:00 PM' },
-  ];
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const token = localStorage.getItem('token') || '';
+  const userId = localStorage.getItem('userId') || '';
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/appointments/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        const result: Appointment[] = data.data.map((appt: any) => ({
+          patientName: appt.patientName || 'Unknown',
+          appointment_date: appt.appointment_date.split('T')[0], // 👈 only date
+          time: appt.time || '',
+        }));
+        setAppointments(result);
+      })
+      .catch(err => console.error('Failed to fetch appointments:', err));
+  }, []);
 
   return (
     <div className="appointments-container">
@@ -16,7 +41,7 @@ const ViewAppointmentsScreen = () => {
           {appointments.map((a, i) => (
             <li key={i} className="appointment-item">
               <span className="patient">{a.patientName}</span>
-              <span className="date">{a.date}</span>
+              <span className="date">{a.appointment_date}</span>
               <span className="time">{a.time}</span>
             </li>
           ))}
